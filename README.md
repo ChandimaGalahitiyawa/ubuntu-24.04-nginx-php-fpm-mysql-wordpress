@@ -31,7 +31,7 @@ ssh -i your-key.pem ubuntu@your-ec2-instance-ip
 ## Step 3: Software installion
 
 ```
-sudo apt-get update -y && sudo apt-get upgrade && sudo apt-get install nginx -y & sudo apt install php-fpm php-common php-mysql php-xml php-curl php-gd php-mbstring php-opcache php-zip php-intl -y && sudo apt-get install mysql-server -y && sudo apt-get install ufw -y  && sudo apt install certbot python3-certbot-nginx -y
+sudo apt-get update -y && sudo apt-get upgrade && sudo apt-get install nginx -y & sudo apt install php8.3-fpm php8.3-common php8.3-mysql php8.3-xml php8.3-curl php8.3-gd php8.3-mbstring php8.3-opcache php8.3-zip php8.3-intl -y && sudo apt-get install mysql-server -y && sudo apt-get install ufw -y  && sudo apt install certbot python3-certbot-nginx -y
 ```
 
 ## Step 4: mysql password chanage
