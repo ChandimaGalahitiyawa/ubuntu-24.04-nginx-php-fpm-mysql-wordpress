@@ -1,0 +1,1 @@
+# ubuntu-24.04-nginx-php-fpm-mysql-wordpress
