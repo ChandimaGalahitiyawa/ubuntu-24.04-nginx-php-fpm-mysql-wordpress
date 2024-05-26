@@ -121,12 +121,8 @@ EXIT;
 
 All done! Now you can use this to create any VPS on WordPress. If you need to change PHP versions, do so either before or after installation.
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## Contact
 
 Your Name - [hello@chandimagalahitiyawa.com](mailto:hello@chandimagalahitiyawa.com)
 
-Project Link: [https://github.com/your-username/your-repository](https://github.com/your-username/your-repository)
+Project Link: [https://github.com/ChandimaGalahitiyawa/ubuntu-24.04-nginx-php-fpm-mysql-wordpress](https://github.com/ChandimaGalahitiyawa/ubuntu-24.04-nginx-php-fpm-mysql-wordpress)
