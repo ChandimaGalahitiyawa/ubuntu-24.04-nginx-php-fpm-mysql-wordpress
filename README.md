@@ -119,6 +119,11 @@ FLUSH PRIVILEGES;
 EXIT;
 ```
 
+## Step 8: WordPress Download
+```
+cd /tmp && wget https://wordpress.org/latest.tar.gz && tar -xvzf latest.tar.gz && tar -xvzf latest.tar.gz && sudo mv wordpress  /var/www/html/example.com && sudo chown -R www-data:www-data /var/www/html/example.com && sudo chmod -R 755 /var/www/html/example.com
+```
+
 All done! Now you can use this to create any VPS on WordPress. If you need to change PHP versions, do so either before or after installation.
 
 ## Contact
