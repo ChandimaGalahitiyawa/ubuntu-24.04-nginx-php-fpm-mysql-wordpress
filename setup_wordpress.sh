@@ -76,9 +76,12 @@ sudo systemctl restart nginx
 # Configure SSL with Certbot
 sudo certbot --nginx -d ${DOMAIN_NAME} -d www.${DOMAIN_NAME} --email $EMAIL --agree-tos --no-eff-email
 
-# Automatically set database name and user based on domain
-DB_NAME="${DOMAIN_NAME}proddb"
-DB_USER="${DOMAIN_NAME}produser"
+# Format the domain name to remove periods for MySQL compatibility
+SANITIZED_DOMAIN_NAME=$(echo "${DOMAIN_NAME}" | tr -d '.')
+
+# Automatically set database name and user based on formatted domain
+DB_NAME="${SANITIZED_DOMAIN_NAME}proddb"
+DB_USER="${SANITIZED_DOMAIN_NAME}produser"
 DB_PASSWORD=$(openssl rand -base64 32 | tr -cd '[:alnum:]')
 
 # Create MySQL database and user
@@ -108,14 +111,19 @@ sed -i "s/database_name_here/${DB_NAME}/" wp-config.php
 sed -i "s/username_here/${DB_USER}/" wp-config.php
 sed -i "s/password_here/${DB_PASSWORD}/" wp-config.php
 
+# Remove default salts and keys
+sed -i '/AUTH_KEY/d' wp-config.php
+sed -i '/SECURE_AUTH_KEY/d' wp-config.php
+sed -i '/LOGGED_IN_KEY/d' wp-config.php
+sed -i '/NONCE_KEY/d' wp-config.php
+sed -i '/AUTH_SALT/d' wp-config.php
+sed -i '/SECURE_AUTH_SALT/d' wp-config.php
+sed -i '/LOGGED_IN_SALT/d' wp-config.php
+sed -i '/NONCE_SALT/d' wp-config.php
+
 # Fetch and set unique salts
 WP_SALTS=$(curl -L https://api.wordpress.org/secret-key/1.1/salt/)
-printf '%s\n' "$WP_SALTS" | while IFS= read -r line
-do
-    key=$(echo "$line" | cut -d\' -f2)
-    value=$(echo "$line" | cut -d\' -f4)
-    sed -i "s|define('$key', 'put your unique phrase here');|define('$key', '$value');|" wp-config.php
-done
+printf '%s\n' "$WP_SALTS" >> wp-config.php
 
 # Set file permissions
 sudo chown -R www-data:www-data /var/www/html/${DOMAIN_NAME}
