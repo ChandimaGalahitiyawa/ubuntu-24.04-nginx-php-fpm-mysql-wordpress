@@ -3,6 +3,12 @@
 # Prompt user for the domain name
 read -p "Enter your domain name (e.g., example.com): " DOMAIN_NAME
 
+# Exit if no domain name is provided
+if [ -z "$DOMAIN_NAME" ]; then
+    echo "No domain name provided. Exiting script."
+    exit 1
+fi
+
 # Generate a strong password for MySQL root user
 MYSQL_ROOT_PASSWORD=$(openssl rand -base64 32)
 
