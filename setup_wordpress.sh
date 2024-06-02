@@ -2,7 +2,6 @@
 
 # Check if a domain name is passed as an argument
 if [ -z "$1" ]; then
-    # Prompt user for the domain name if not provided as an argument
     read -p "Enter your domain name (e.g., example.com): " DOMAIN_NAME
 else
     DOMAIN_NAME=$1
@@ -13,6 +12,9 @@ if [ -z "$DOMAIN_NAME" ]; then
     echo "No domain name provided. Exiting script."
     exit 1
 fi
+
+# Set email address using the provided domain
+EMAIL="info@${DOMAIN_NAME}"
 
 # Generate a strong password for MySQL root user
 MYSQL_ROOT_PASSWORD=$(openssl rand -base64 32)
@@ -56,10 +58,10 @@ server {
     }
 
     location ~ \.php$ {
-         include snippets/fastcgi-php.conf;
-         fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
-         fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
-         include fastcgi_params;
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+        include fastcgi_params;
     }
 }
 EOL
@@ -71,8 +73,8 @@ sudo ln -s /etc/nginx/sites-available/${DOMAIN_NAME}.conf /etc/nginx/sites-enabl
 sudo nginx -t
 sudo systemctl restart nginx
 
-# Obtain and install SSL certificate
-sudo certbot --nginx -d ${DOMAIN_NAME} -d www.${DOMAIN_NAME}
+# Configure SSL with Certbot
+sudo certbot --nginx -d ${DOMAIN_NAME} -d www.${DOMAIN_NAME} --email $EMAIL --agree-tos --no-eff-email
 
 # Prompt user for database details
 read -p "Enter your database name: " DB_NAME
