@@ -76,9 +76,9 @@ sudo systemctl restart nginx
 # Configure SSL with Certbot
 sudo certbot --nginx -d ${DOMAIN_NAME} -d www.${DOMAIN_NAME} --email $EMAIL --agree-tos --no-eff-email
 
-# Prompt user for database details
-read -p "Enter your database name: " DB_NAME
-read -p "Enter your database user: " DB_USER
+# Automatically set database name and user based on domain
+DB_NAME="${DOMAIN_NAME}proddb"
+DB_USER="${DOMAIN_NAME}produser"
 DB_PASSWORD=$(openssl rand -base64 32)
 
 # Create MySQL database and user
@@ -100,6 +100,27 @@ cd /tmp
 wget https://wordpress.org/latest.tar.gz
 tar -xvzf latest.tar.gz
 sudo mv wordpress /var/www/html/${DOMAIN_NAME}
+
+# Configure WordPress wp-config.php
+cd /var/www/html/${DOMAIN_NAME}
+mv wp-config-sample.php wp-config.php
+sed -i "s/database_name_here/${DB_NAME}/" wp-config.php
+sed -i "s/username_here/${DB_USER}/" wp-config.php
+sed -i "s/password_here/${DB_PASSWORD}/" wp-config.php
+
+# Fetch and set unique salts
+WP_SALTS=$(curl -L https://api.wordpress.org/secret-key/1.1/salt/)
+sed -i "/AUTH_KEY/d" wp-config.php
+sed -i "/SECURE_AUTH_KEY/d" wp-config.php
+sed -i "/LOGGED_IN_KEY/d" wp-config.php
+sed -i "/NONCE_KEY/d" wp-config.php
+sed -i "/AUTH_SALT/d" wp-config.php
+sed -i "/SECURE_AUTH_SALT/d" wp-config.php
+sed -i "/LOGGED_IN_SALT/d" wp-config.php
+sed -i "/NONCE_SALT/d" wp-config.php
+echo "${WP_SALTS}" >> wp-config.php
+
+# Set file permissions
 sudo chown -R www-data:www-data /var/www/html/${DOMAIN_NAME}
 sudo chmod -R 755 /var/www/html/${DOMAIN_NAME}
 
