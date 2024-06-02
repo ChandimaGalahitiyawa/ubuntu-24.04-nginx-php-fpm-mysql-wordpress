@@ -1,7 +1,12 @@
 #!/bin/bash
 
-# Prompt user for the domain name
-read -p "Enter your domain name (e.g., example.com): " DOMAIN_NAME
+# Check if a domain name is passed as an argument
+if [ -z "$1" ]; then
+    # Prompt user for the domain name if not provided as an argument
+    read -p "Enter your domain name (e.g., example.com): " DOMAIN_NAME
+else
+    DOMAIN_NAME=$1
+fi
 
 # Exit if no domain name is provided
 if [ -z "$DOMAIN_NAME" ]; then
