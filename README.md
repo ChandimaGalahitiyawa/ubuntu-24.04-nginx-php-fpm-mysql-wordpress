@@ -29,11 +29,11 @@ ssh -i your-key.pem ubuntu@your-ec2-instance-ip
 ## Step 3: Software installion
 copy past this code and hit enter
 ```
-wget -qO- https://raw.githubusercontent.com/ChandimaGalahitiyawa/ubuntu-24.04-nginx-php-fpm-mysql-wordpress/main/setup_wordpress.sh | sudo bash
+wget https://raw.githubusercontent.com/ChandimaGalahitiyawa/ubuntu-24.04-nginx-php-fpm-mysql-wordpress/main/setup_wordpress.sh && chmod +x setup_wordpress.sh && sudo ./setup_wordpress.sh
 
 ```
 
-## Manual Installation
+## Manual Installation 
 ## Step 1: Launch an EC2 Instance
 
 1. Go to the AWS Management Console.
