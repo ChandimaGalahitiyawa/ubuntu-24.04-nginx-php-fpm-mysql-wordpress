@@ -30,7 +30,7 @@ sudo chmod 600 /var/www/db_details.txt
 sudo apt-get install ufw -y
 sudo ufw allow OpenSSH
 sudo ufw allow 'Nginx Full'
-sudo ufw enable
+echo "y" | sudo ufw enable
 
 # Install Certbot for SSL
 sudo apt-get install certbot python3-certbot-nginx -y
