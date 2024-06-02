@@ -26,12 +26,6 @@ echo "MySQL Root Password: ${MYSQL_ROOT_PASSWORD}" > /var/www/db_details.txt
 sudo chown www-data:www-data /var/www/db_details.txt
 sudo chmod 600 /var/www/db_details.txt
 
-# Install UFW and allow necessary ports
-sudo apt-get install ufw -y
-sudo ufw allow OpenSSH
-sudo ufw allow 'Nginx Full'
-echo "y" | sudo ufw enable
-
 # Install Certbot for SSL
 sudo apt-get install certbot python3-certbot-nginx -y
 
