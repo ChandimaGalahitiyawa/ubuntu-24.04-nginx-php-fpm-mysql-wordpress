@@ -16,8 +16,8 @@ fi
 # Set email address using the provided domain
 EMAIL="info@${DOMAIN_NAME}"
 
-# Generate a strong password for MySQL root user
-MYSQL_ROOT_PASSWORD=$(openssl rand -base64 32)
+# Generate a strong alphanumeric password for MySQL root user
+MYSQL_ROOT_PASSWORD=$(openssl rand -base64 32 | tr -cd '[:alnum:]')
 
 # Update and upgrade the system
 sudo apt-get update -y && sudo apt-get upgrade -y
@@ -79,7 +79,7 @@ sudo certbot --nginx -d ${DOMAIN_NAME} -d www.${DOMAIN_NAME} --email $EMAIL --ag
 # Automatically set database name and user based on domain
 DB_NAME="${DOMAIN_NAME}proddb"
 DB_USER="${DOMAIN_NAME}produser"
-DB_PASSWORD=$(openssl rand -base64 32)
+DB_PASSWORD=$(openssl rand -base64 32 | tr -cd '[:alnum:]')
 
 # Create MySQL database and user
 sudo mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "
@@ -110,19 +110,17 @@ sed -i "s/password_here/${DB_PASSWORD}/" wp-config.php
 
 # Fetch and set unique salts
 WP_SALTS=$(curl -L https://api.wordpress.org/secret-key/1.1/salt/)
-sed -i "/AUTH_KEY/d" wp-config.php
-sed -i "/SECURE_AUTH_KEY/d" wp-config.php
-sed -i "/LOGGED_IN_KEY/d" wp-config.php
-sed -i "/NONCE_KEY/d" wp-config.php
-sed -i "/AUTH_SALT/d" wp-config.php
-sed -i "/SECURE_AUTH_SALT/d" wp-config.php
-sed -i "/LOGGED_IN_SALT/d" wp-config.php
-sed -i "/NONCE_SALT/d" wp-config.php
-echo "${WP_SALTS}" >> wp-config.php
+printf '%s\n' "$WP_SALTS" | while IFS= read -r line
+do
+    key=$(echo "$line" | cut -d\' -f2)
+    value=$(echo "$line" | cut -d\' -f4)
+    sed -i "s|define('$key', 'put your unique phrase here');|define('$key', '$value');|" wp-config.php
+done
 
 # Set file permissions
 sudo chown -R www-data:www-data /var/www/html/${DOMAIN_NAME}
 sudo chmod -R 755 /var/www/html/${DOMAIN_NAME}
 
-echo "All done! Now you can complete the WordPress setup through your web browser."
 echo "Database details are saved in /var/www/db_details.txt"
+echo "This script created by Chandima Galahitiyawa, Subscribe on YouTube"
+echo "All done! Now you can complete the WordPress setup through your web browser."
