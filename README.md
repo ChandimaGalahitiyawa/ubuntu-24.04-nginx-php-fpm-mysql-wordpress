@@ -5,10 +5,35 @@ A comprehensive guide to installing and setting up WordPress on an AWS EC2 insta
 
 ## Prerequisites
 
-- An AWS account
-- Basic knowledge of SSH and command-line operations
-- A domain name (optional, but recommended for SSL)
+- An VPS/Cloud Instance Account (AWS / Digitalocean / Vultr / Linode)
+- A domain name
 
+## Automation with shell scripting v1
+## Step 1: Launch an EC2 Instance
+
+1. Go to the AWS Management Console.
+2. Launch an EC2 instance with Ubuntu 24.04 as the AMI.
+3. Choose an instance type (e.g., t2.micro).
+4. Configure security group to allow HTTP (port 80), HTTPS (port 443), and SSH (port 22) traffic.
+
+## Step 2: Connect
+
+#Use AWS Console
+
+
+#Use SSH to connect to your instance. (Terminal or Putty)
+```
+ssh -i your-key.pem ubuntu@your-ec2-instance-ip
+```
+
+## Step 3: Software installion
+copy past this code and hit enter
+```
+wget -qO- https://raw.githubusercontent.com/ChandimaGalahitiyawa/ubuntu-24.04-nginx-php-fpm-mysql-wordpress/main/setup_wordpress.sh | sudo bash
+
+```
+
+## Manual Installation
 ## Step 1: Launch an EC2 Instance
 
 1. Go to the AWS Management Console.
